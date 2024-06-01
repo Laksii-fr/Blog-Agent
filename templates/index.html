@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <form id="blogForm">
+            <div class="form-group">
+                <label for="blogTopicInput">Blog Topic</label>
+                <input type="text" class="form-control" id="blogTopicInput" placeholder="Write Here">
+            </div>
+            <div class="form-group">
+                <label for="audienceInput">Audience</label>
+                <input type="text" class="form-control" id="audienceInput" placeholder="Specify the Audience you want to cater">
+            </div>
+            <div class="form-group">
+                <label for="toneInput">Tone</label>
+                <input type="text" class="form-control" id="toneInput" placeholder="Mention the tone of your blog">
+            </div>
+            <div class="form-group">
+                <label for="wordlimitInput">Word Limit</label>
+                <input type="text" class="form-control" id="wordlimitInput" placeholder="Give the word limit for your blog">
+            </div>
+            <div class="form-group">
+                <label for="specificationsInput">Specifications</label>
+                <input type="text" class="form-control" id="specificationsInput" placeholder="Mention any Suggestions that you want to include in your blog">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Enter</button>
+        </form>
+    </div>
+    
+    <div class="container mt-5">
+        <div class="mt-5">
+            <h2>Processed Content</h2>
+            <div id="outputContent" class="border p-3"></div>
+            <div id="errorMessage" class="text-danger mt-2"></div>
+        </div>
+    </div>
+
+    <script>
+        async function submitForm() {
+            const blogTopic = document.getElementById('blogTopicInput').value.trim();
+            const audience = document.getElementById('audienceInput').value.trim();
+            const tone = document.getElementById('toneInput').value.trim();
+            const wordlimit = document.getElementById('wordlimitInput').value.trim();
+            const specifications = document.getElementById('specificationsInput').value.trim();
+            const outputContent = document.getElementById('outputContent');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Clear previous messages
+            errorMessage.innerText = '';
+            outputContent.innerHTML = '';
+            
+            // Check if the inputs are empty
+            if (blogTopic === '' || audience === '' || tone === '' || wordlimit === '' || specifications === '') {
+                errorMessage.innerText = 'Please fill all the fields before proceeding';
+                return;
+            }
+            
+            // Send input to the backend for processing
+            try {
+                const response = await fetch('http://localhost:8000/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ blog_topic: blogTopic, audience: audience, tone: tone, word_limit: wordlimit, specifications: specifications })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                
+                // Display the processed content
+                outputContent.innerHTML = `<p>${data.processed_text}</p>`;
+                
+                // Clear the input fields
+                document.getElementById('blogTopicInput').value = '';
+                document.getElementById('audienceInput').value = '';
+                document.getElementById('toneInput').value = '';
+                document.getElementById('wordlimitInput').value = '';
+                document.getElementById('specificationsInput').value = '';
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.innerText = 'Error processing your request.';
+            }
+        }
+    </script>
+</body>
+</html>
