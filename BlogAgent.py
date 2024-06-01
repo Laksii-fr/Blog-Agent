@@ -95,6 +95,8 @@ write = Task(
         "5. Proofread for grammatical errors and "
             "alignment with the brand's voice.\n"
         "6. The word limit should strictly be written in {word_limit} words"
+        "7. The blog should be written in {tone} tone.\n"
+        "8. The content should be planned in a way such that it caters to {audience}"
     ),
     expected_output="A well-written blog post "
         "in markdown format, ready for publication, "
