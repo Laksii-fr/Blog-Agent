@@ -14,106 +14,75 @@ os.environ["OPENAI_MODEL_NAME"] = 'gpt-3.5-turbo'
 planner = Agent(
     role="Content Planner",
     goal="Plan engaging and factually accurate content on {topic}",
-    backstory="You're working on planning a blog article "
-              "about the topic: {topic}."
-              "You collect information that helps the "
-              "audience learn something "
-              "and make informed decisions. "
-              "Your work is the basis for "
-              "the Content Writer to write an article on this topic.",
+    backstory="You're working on planning a blog article about the topic: {topic}. "
+              "Your goal is to collect information that helps the audience learn something new "
+              "and make informed decisions. Your work forms the basis for the Content Writer "
+              "to write an insightful and accurate article on this topic.",
     allow_delegation=False,
-	verbose=True
+    verbose=True
 )
 
 writer = Agent(
     role="Content Writer",
-    goal="Write insightful and factually accurate "
-         "opinion piece about the topic: {topic}",
-    backstory="You're working on a writing "
-              "a new opinion piece about the topic: {topic}. "
-              "You base your writing on the work of "
-              "the Content Planner, who provides an outline "
-              "and relevant context about the topic. "
-              "You follow the main objectives and "
-              "direction of the outline, "
-              "as provide by the Content Planner. "
-              "You also provide objective and impartial insights "
-              "and back them up with information "
-              "provide by the Content Planner. "
-              "You acknowledge in your opinion piece "
-              "when your statements are opinions "
-              "as opposed to objective statements."
-              "incorporate these 'suggestions:{specifications}' in the content",
+    goal="Write an insightful and factually accurate opinion piece about the topic: {topic}",
+    backstory="You're tasked with writing a new opinion piece about the topic: {topic}. "
+              "Your writing is based on the detailed outline and context provided by the Content Planner. "
+              "Follow the main objectives and direction of the outline, incorporating suggestions: {specifications}. "
+              "Provide objective and impartial insights backed by information from the Content Planner, "
+              "clearly distinguishing between opinions and objective statements.",
     allow_delegation=False,
     verbose=True
 )
 
 editor = Agent(
     role="Editor",
-    goal="Edit a given blog post to align with "
-         "the writing style of the organization. ",
-    backstory="You are an editor who receives a blog post "
-              "from the Content Writer. "
-              "Your goal is to review the blog post "
-              "to ensure that it follows journalistic best practices,"
-              "provides balanced viewpoints "
-              "when providing opinions or assertions, "
-              "and also avoids major controversial topics "
-              "or opinions when possible.",
+    goal="Edit a given blog post to align with the writing style of the organization.",
+    backstory="You are an editor who receives a blog post from the Content Writer. "
+              "Your goal is to review the blog post to ensure it follows journalistic best practices, "
+              "provides balanced viewpoints, and avoids major controversial topics or opinions when possible. "
+              "Ensure the content is aligned with the brand's voice and is catered to the target audience.",
     allow_delegation=False,
     verbose=True
 )
 
 plan = Task(
     description=(
-        "1. Prioritize the latest trends, key players, "
-            "and noteworthy news on {topic}.\n"
-        "2. Identify the target audience, considering "
-            "their interests and pain points.\n"
-        "3. Develop a detailed content outline including "
-            "an introduction, key points, and a call to action.\n"
+        "1. Prioritize the latest trends, key players, and noteworthy news on {topic}.\n"
+        "2. Identify the target audience, considering their interests and pain points.\n"
+        "3. Develop a detailed content outline including an introduction, key points, and a call to action.\n"
         "4. Include SEO keywords and relevant data or sources.\n"
-        "5. The blog should be written in {tone} tone.\n"
-        "6. The content should be planned in a way such that it caters to {audience}"
+        "5. Plan the content to be written in a {tone} tone.\n"
+        "6. Ensure the content caters to the specified audience: {audience}.\n"
+        "7. Make sure to focus on: {specifications}.\n"
     ),
-    expected_output="A comprehensive content plan document "
-        "with an outline, audience analysis, "
-        "SEO keywords, and resources.",
+    expected_output="A comprehensive content plan document with an outline, audience analysis, SEO keywords, and resources.",
     agent=planner,
 )
 
 write = Task(
     description=(
-        "1. Use the content plan to craft a compelling "
-            "blog post on {topic}.\n"
+        "1. Use the content plan to craft a compelling blog post on {topic}.\n"
         "2. Incorporate SEO keywords naturally.\n"
-		"3. Sections/Subtitles are properly named "
-            "in an engaging manner.\n"
-        "4. Ensure the post is structured with an "
-            "engaging introduction, insightful body, "
-            "and a summarizing conclusion.\n"
-        "5. Proofread for grammatical errors and "
-            "alignment with the brand's voice.\n"
-        "6. The word limit should strictly be written in {word_limit} words"
-        "7. The blog should be written in {tone} tone.\n"
-        "8. The content should be planned in a way such that it caters to {audience}"
+        "3. Name sections/subtitles in an engaging manner.\n"
+        "4. Structure the post with an engaging introduction, insightful body, and a summarizing conclusion.\n"
+        "5. Proofread for grammatical errors and alignment with the brand's voice.\n"
+        "6. Ensure the word limit is strictly adhered to: {word_limit} words.\n"
+        "7. Write the blog in a {tone} tone.\n"
+        "8. Ensure the content caters to the specified audience: {audience}.\n"
+        "9. Make sure to focus on: {specifications}.\n"
     ),
-    expected_output="A well-written blog post "
-        "in markdown format, ready for publication, "
-        "each section should have 2 or 3 paragraphs.",
+    expected_output="A well-written blog post in markdown format, ready for publication, with each section having 2 or 3 paragraphs.",
     agent=writer,
 )
 
 edit = Task(
-    description=("Proofread the given blog post for "
-                 "grammatical errors and "
-                 "alignment with the brand's voice."
-                 "Make sure it is catered to {audience}."
-                 "Has word limit of {word_limit}."
-                 "and incorporates 'suggestions:{specifications}'."),
-    expected_output="A well-written blog post in markdown format, "
-                    "ready for publication, "
-                    "each section should have 2 or 3 paragraphs.",
+    description=(
+        "1. Proofread the given blog post for grammatical errors and alignment with the brand's voice.\n"
+        "2. Ensure the content caters to the specified audience: {audience}.\n"
+        "3. Verify the word limit is adhered to: {word_limit} words.\n"
+        "4. Make sure to focus on: {specifications}.\n"
+    ),
+    expected_output="A well-edited blog post in markdown format, ready for publication, with each section having 2 or 3 paragraphs.",
     agent=editor
 )
 
