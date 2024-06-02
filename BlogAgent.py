@@ -2,7 +2,7 @@
 
 import warnings
 warnings.filterwarnings('ignore')
-
+import markdown2
 from crewai import Agent, Task, Crew
 from IPython.display import Markdown
 
@@ -127,6 +127,6 @@ crew = Crew(
 
 
 def blog_writer(blog_topic, audience, tone, word_limit, specifications):
-    result = crew.kickoff(inputs={"topic": blog_topic,"audience": audience, "tone":tone, "word_limit": word_limit, "specifications":specifications})
-    #formatted_result = Markdown(result)
-    return result
+    result = crew.kickoff(inputs={"topic": blog_topic, "audience": audience, "tone": tone, "word_limit": word_limit, "specifications": specifications})
+    formatted_result = markdown2.markdown(result)  # Corrected line
+    return formatted_result
