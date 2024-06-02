@@ -9,7 +9,7 @@ from BlogAgent import blog_writer  # Assuming blog_writer is in a module named B
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
-
+word_limit = 1000
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -32,7 +32,6 @@ class ProcessRequest(BaseModel):
     blog_topic: str
     audience: str
     tone: str
-    word_limit: int
     specifications: str
 
 @app.post("/process") 
@@ -40,10 +39,9 @@ async def process_input(request: ProcessRequest):
     blog_topic = request.blog_topic
     audience = request.audience
     tone = request.tone
-    word_limit = request.word_limit
     specifications = request.specifications 
 
-    logging.info(f"Received blog_topic: {blog_topic}, audience: {audience}, tone:{tone}, word_limit: {word_limit}, specifications: {specifications}")
+    logging.info(f"Received blog_topic: {blog_topic}, audience: {audience}, tone:{tone}, specifications: {specifications}")
     
     try:
         # Call the blog_writer function
