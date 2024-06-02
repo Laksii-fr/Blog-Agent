@@ -62,11 +62,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="wordlimitInput">Word Limit</label>
-                <input type="text" class="form-control" id="wordlimitInput" placeholder="Give the word limit for your blog">
-            </div>
-            <div class="form-group">
-                <label for="specificationsInput">Specifications</label>
+                <label for="specificationsInput">Key Points</label>
                 <input type="text" class="form-control" id="specificationsInput" placeholder="Mention any Suggestions that you want to include in your blog">
             </div>
             <button type="button" class="btn btn-primary" onclick="submitForm()">Enter</button>
@@ -86,8 +82,7 @@
             const blogTopic = document.getElementById('blogTopicInput').value.trim();
             const audience = document.getElementById('audienceInput').value.trim() || 'General audience';
             const tone = document.getElementById('toneInput').value.trim() || 'Neutral';
-            const wordlimit = document.getElementById('wordlimitInput').value.trim() || '500'; // default word limit
-            const specifications = document.getElementById('specificationsInput').value.trim() || 'No specific instructions';
+            const specifications = document.getElementById('specificationsInput').value.trim() || blogTopic;
             const outputContent = document.getElementById('outputContent');
             const errorMessage = document.getElementById('errorMessage');
             
@@ -108,7 +103,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ blog_topic: blogTopic, audience: audience, tone: tone, word_limit: wordlimit, specifications: specifications })
+                    body: JSON.stringify({ blog_topic: blogTopic, audience: audience, tone: tone, specifications: specifications })
                 });
                 
                 if (!response.ok) {
@@ -124,7 +119,6 @@
                 document.getElementById('blogTopicInput').value = '';
                 document.getElementById('audienceInput').value = '';
                 document.getElementById('toneInput').value = '';
-                document.getElementById('wordlimitInput').value = '';
                 document.getElementById('specificationsInput').value = '';
             } catch (error) {
                 console.error('Error:', error);

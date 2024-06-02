@@ -29,7 +29,7 @@ writer = Agent(
     goal="Write an insightful and factually accurate opinion piece about the topic: {topic}",
     backstory="You're tasked with writing a new opinion piece about the topic: {topic}. "
               "Your writing is based on the detailed outline and context provided by the Content Planner. "
-              "Follow the main objectives and direction of the outline, incorporating suggestions: {specifications}. "
+              "Follow the main objectives and direction of the outline, Make sure to focus on: {specifications}. "
               "Provide objective and impartial insights backed by information from the Content Planner, "
               "clearly distinguishing between opinions and objective statements.",
     allow_delegation=False,
@@ -76,7 +76,7 @@ write = Task(
         "8. Ensure the content caters to the specified audience: {audience}.\n"
         "9. Make sure to focus on: {specifications}.\n"
     ),
-    expected_output="A well-written blog post in markdown format, ready for publication, with each section having 2 or 3 paragraphs.",
+    expected_output="A well-written blog post in markdown format, ready for publication, containing only 2-3 sections only related to topic",
     agent=writer,
 )
 
@@ -88,7 +88,8 @@ edit = Task(
         "3. Verify the word limit is adhered to: {word_limit} words.\n"
         "4. Make sure to focus on: {specifications}.\n"
     ),
-    expected_output="A well-edited blog post in markdown format, ready for publication, with each section having 2 or 3 paragraphs.",
+    expected_output="A well-written blog post in markdown format, ready for publication, containing only 2-3 sections only related to topic.\n"
+                    "Subheadings should not include terms like : keypoints,targetaudience,tone",
     agent=editor
 )
 
