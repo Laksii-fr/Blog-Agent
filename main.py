@@ -9,7 +9,7 @@ from BlogAgent import blog_writer  # Assuming blog_writer is in a module named B
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
-
+word_limit = 1000
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
